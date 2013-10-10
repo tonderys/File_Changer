@@ -4,9 +4,10 @@ import re
 
 
 class File_Changer:
-    def __init__(self, filename, searched_phrase, old_phrase, new_phrase):
+    def __init__(self, filename, searched_phrase="[0-4]", line_length=4 , old_phrase="4", new_phrase="2"):
         self.filename = filename
-        self.searched_phrase = searched_phrase
+        self.line_length = line_length
+        self.searched_phrase = "%s{%s}" % (searched_phrase, line_length)
         self.old_phrase = old_phrase
         self.new_phrase = new_phrase
         self.change_file()
@@ -17,7 +18,7 @@ class File_Changer:
         old_phrase = self.old_phrase
         source = open(filename)
         for line in source:
-            if re.search(searched_phrase, line) and re.search(old_phrase, line) and len(line.strip())==4:
+            if re.search(searched_phrase, line) and re.search(old_phrase, line) and len(line.strip())==self.line_length:
                 print "zmiana pliku "+filename
                 source.close()
                 return True
@@ -38,7 +39,7 @@ class File_Changer:
                 source = open (filename+"~", "r")
                    
                 for line in source:
-                    if re.search(searched_phrase, line) and re.search(old_phrase, line) and len(line.strip())==4:
+                    if re.search(searched_phrase, line) and re.search(old_phrase, line) and len(line.strip())==self.line_length:
                         new_file.write(line.replace(old_phrase,new_phrase))
                     else:
                         new_file.write(line)
@@ -48,5 +49,4 @@ class File_Changer:
             print "no such file, or cant open: "+sys.argv[1]
 
 if __name__ == "__main__":
-    changer = File_Changer(sys.argv[1], "[0-4]{4}", "4", "2")
-    
+    changer = File_Changer(sys.argv[1])
