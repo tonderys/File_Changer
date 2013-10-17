@@ -32,6 +32,12 @@ class File_Finder:
     def print_file_paths(self):
         for path in self.file_paths:
             print path
+    
+    def found_any(self):
+        if len(self.file_paths) == 0:
+            return False
+        else:
+            return True
 
 if __name__ == "__main__":
     file_path = sys.argv[1]

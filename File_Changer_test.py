@@ -12,8 +12,7 @@ class File_changer_test(unittest.TestCase):
             os.remove(filename)
     
     def tearDown(self):
-        if os.path.exists(filename):
-            os.remove(filename)
+        self.setUp()
         if os.path.exists(filename+"~"):
             os.remove(filename+"~")
 
