@@ -18,16 +18,15 @@ class File_finder_test(unittest.TestCase):
     
     def test_file_not_found(self):
         os.mkdir(directory) 
-        self.assertEqual(File_Finder(directory, ".txt").file_paths[0], "haven't found any file with wanted extension")
+        self.assertEqual(File_Finder(directory, ".txt").output_code, 2)
   
     def test_file_found(self):
         os.mkdir(directory)
         open("%s/file.txt" % directory,"w").close()
-        self.assertNotEqual(File_Finder(directory, ".txt").file_paths[0], "can't find/open file path")
-        self.assertNotEqual(File_Finder(directory, ".txt").file_paths[0], "haven't found any file with wanted extension")
+        self.assertEqual(File_Finder(directory, ".txt").output_code, 1)
     
     def test_invalid_path(self):
-        self.assertEqual(File_Finder(directory, ".txt").file_paths[0], "can't find/open file path")
+        self.assertEqual(File_Finder(directory, ".txt").output_code, 3)
 
 if __name__ == "__main__":
     unittest.main()
