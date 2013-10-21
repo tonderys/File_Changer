@@ -17,16 +17,19 @@ class File_Changer_GUI:
         self.extension_entry = Entry(self.top_window, textvariable = self.extension, width = 30)
         self.extension_entry.grid(column = 2, row = 2)
         self.scroll = Scrollbar(self.top_window)
+        self.scroll.grid(column = 3, row = 1, rowspan = 3)
         self.files_list = Listbox(self.top_window, yscrollcommand = self.scroll.set )
         self.files_list.grid(column = 3, row = 1, rowspan = 3)
+        self.scroll.config (command = self.files_list.yview )
         self.search_button = Button(self.top_window, text = "Search", command = self.search_for_files_and_put_to_list)
         self.search_button.grid (column = 1, columnspan = 2, row = 3)
 
         self.top_window.mainloop()
 
     def search_for_files_and_put_to_list(self):
-        self.finder = File_Finder(self.path, self.extension)
+        self.files_list.delete(0, END)
+        self.finder = File_Finder(self.path_entry.get(), self.extension_entry.get())
         for file_path in self.finder.file_paths:
-            self.files_list.insert(file_path)
+            self.files_list.insert(0,file_path)
 
 gui = File_Changer_GUI()
