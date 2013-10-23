@@ -56,26 +56,24 @@ class File_Changer_GUI:
         self.unchanged_files_list = Listbox(self.top_window, width = 30, fg = Color("red"))
         self.unchanged_files_list.grid(column = 5, row = 6, rowspan = 4)
 
-        self.top_window.mainloop()
-
     def search_for_files_and_put_to_list(self):
-        i = 0
         self.files_list.delete(0, END)
         self.finder = File_Finder(self.path_entry.get(), self.extension_entry.get())
         for file_path in self.finder.file_paths:
-            self.files_list.insert(i,file_path)
-            i += 1
+            self.files_list.insert(1,file_path)
 
     def change_files(self):
-        i = 0
         self.changed_files_list.delete(0, END)
         for file_path in self.files_list.get(0, END):
-            changer = File_Changer(str(file_path), str(self.searched_phrase_entry.get()), int(self.line_length_entry.get()), str(self.old_phrase_entry.get()), str(self.new_phrase_entry.get()), 0)
-            print "File_Changer(%s, %s, %s, %s, %s)" % (file_path, self.searched_phrase_entry.get(), self.line_length_entry.get(), self.old_phrase_entry.get(), self.new_phrase_entry.get())
-            if changer.output_code != 1:
-                self.unchanged_files_list.insert(i, file_path)
-                i += 1
-            else:
-                self.changed_files_list.insert(i, file_path)
-                i+= 1
-gui = File_Changer_GUI()
+            changer = File_Changer(str(file_path), str(self.searched_phrase_entry.get()), int(self.line_length_entry.get()), str(self.old_phrase_entry.get()), str(self.new_phrase_entry.get()))
+            self.put_on_proper_list(changer.output_code, file_path)
+
+    def put_on_proper_list(self, code, file_path):
+        if code != 1:
+            self.unchanged_files_list.insert(1, file_path)
+        else:
+            self.changed_files_list.insert(1, file_path)
+
+if __name__ == "__main__":
+    gui = File_Changer_GUI()
+    gui.top_window.mainloop()
