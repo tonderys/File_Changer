@@ -4,7 +4,7 @@ class NoTuplePassedToDraw (Exception):
     pass
 
 class DrawGraph:
-    def __init__(self,top_window, values, height=500, row = 1, column = 2):
+    def __init__(self,top_window, values, width = 500, height = 500, row = 1, column = 1):
         if type(values) is not tuple: raise NoTuplePassedToDraw
         self.values = values
         self.width = len(self.values)*10
@@ -16,22 +16,20 @@ class DrawGraph:
         self.x_axis = self.y_bottom
         self.min_value = 0
         self.max_value = 0
+        scroll_height = 20
 
         self.top_window = top_window
-        frame = Frame(self.top_window, width = 500, height = 500)
-        frame.grid(row = 1, column = 1)
-        self.board = Canvas (self.top_window,width = self.width, height = self.height, scrollregion = (0,0,500,500))
-        scrollbar = Scrollbar(self.top_window, orient = HORIZONTAL)
-        scrollbar.pack(side = BOTTOM, fill = X)
-        scrollbar.config(command = self.board.xview)
-        self.board.config(width = self.width, height = self.height)
-        self.board.config(xscrollcommand = scrollbar.set)
-        #self.board.grid(row = row, column = column, expand = True)
-        self.board.pack(side = LEFT, fill = BOTH, expand = True)
-       
-        self.interior = interior = Frame(self.board)
-        interior_id = self.board.create_window(0, 0, window=interior,
-                                           anchor=NW)
+
+        self.frame = Frame(self.top_window, width = 500, height = self.height)
+        self.frame.grid(row = 0, column = 0)
+        self.frame.grid_propagate(False)
+
+        self.scroll = Scrollbar (self.frame, orient=HORIZONTAL)
+        self.board = Canvas (self.frame, width = 500, height = self.height-scroll_height, scrollregion = (0,0,self.width, self.height), xscrollcommand=self.scroll.set)
+        self.scroll['command'] = self.board.xview
+        
+        self.board.grid(row = 0, column = 0, sticky = (N,E,W,S))
+        self.scroll.grid(row = 1, column = 0, sticky = (E,W))
  
         self.set_min_max_values()
         self.set_range_of_values()
@@ -73,8 +71,7 @@ class DrawGraph:
         return self.x_axis-(self.values[x]*self.scale)
 if __name__ == "__main__":
     top_window = Tk()
-    tuple_of_numbers = (1,4,9,16,25,36,49,64,81,100,81,64,49,36,25,16,9,4)
-    tuple_of_tuples = (tuple_of_numbers) 
-    draw_graph = DrawGraph(top_window, tuple_of_numbers)
+    tuple_of_numbers = (0,1,4,9,16,25,36,49,64,81,100,81,64,49,36,25,16,9,4,1)
+    draw_graph = DrawGraph(top_window, tuple_of_numbers*5)
     draw_graph.top_window.mainloop()
-        
+       
