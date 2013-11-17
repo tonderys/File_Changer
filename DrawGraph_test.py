@@ -21,27 +21,27 @@ class DrawGraph_test(unittest.TestCase):
         self.assertEqual(graph.max_value, 4)
 
     def test_scale_above_and_including_zero(self):
-        graph = DrawGraph(self.top,(0,5), 500)
+        graph = DrawGraph(self.top,(0,5), 500, 500)
         self.assertEqual(graph.scale, 100)
         self.assertEqual(graph.x_axis, 500)
 
     def test_scale_above_and_excluding_zero(self):
-        graph = DrawGraph(self.top,(10,5), 500)
+        graph = DrawGraph(self.top,(10,5), 500, 500)
         self.assertEqual(graph.scale, 50)
         self.assertEqual(graph.x_axis, 500)
 
     def test_scale_above_and_below_zero(self):
-        graph = DrawGraph(self.top,(-2,5), 70)
+        graph = DrawGraph(self.top,(-2,5), 70, 70)
         self.assertEqual(graph.scale, 10)
         self.assertEqual(graph.x_axis, 50)
 
     def test_scale_above_and_including_zero(self):
-        graph = DrawGraph(self.top,(0,-75), 150)
+        graph = DrawGraph(self.top,(0,-75), 150, 150)
         self.assertEqual(graph.scale, 2)
         self.assertEqual(graph.x_axis, 0)
 
     def test_scale_above_and_excluding_zero(self):
-        graph = DrawGraph(self.top,(-17,-5), 68)
+        graph = DrawGraph(self.top,(-17,-5), 68, 68)
         self.assertEqual(graph.scale, 4)
         self.assertEqual(graph.x_axis, 0)
 

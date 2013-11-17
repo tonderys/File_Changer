@@ -7,27 +7,25 @@ class DrawGraph:
     def __init__(self,top_window, values, width = 500, height = 500, row = 1, column = 1):
         if type(values) is not tuple: raise NoTuplePassedToDraw
         self.values = values
-        self.width = len(self.values)*10
-        self.height = height
-        self.y_top = 1
-        self.y_bottom = self.height
-        self.x_left_border = 1 
-        self.x_right_border = self.width 
-        self.x_axis = self.y_bottom
         self.min_value = 0
         self.max_value = 0
-        scroll_height = 20
+
+        canvas_width = len(self.values)*10
+        canvas_height = height
+        scroll_height = 15
+        frame_width = width
+        frame_height = canvas_height + scroll_height
+
+        self.y_top = 1
+        self.y_bottom = canvas_height
+        self.x_left_border = 1 
+        self.x_right_border = canvas_width 
+        self.x_axis = self.y_bottom
 
         self.top_window = top_window
 
-        self.frame = Frame(self.top_window, width = 500, height = self.height)
-        self.frame.grid(row = 0, column = 0)
-        self.frame.grid_propagate(False)
-
-        self.scroll = Scrollbar (self.frame, orient=HORIZONTAL)
-        self.board = Canvas (self.frame, width = 500, height = self.height-scroll_height, scrollregion = (0,0,self.width, self.height), xscrollcommand=self.scroll.set)
-        self.scroll['command'] = self.board.xview
-        
+        self.setup_frame(frame_width, frame_height, row, column)
+        self.setup_canvas(frame_width, canvas_width, canvas_height)
         self.board.grid(row = 0, column = 0, sticky = (N,E,W,S))
         self.scroll.grid(row = 1, column = 0, sticky = (E,W))
  
@@ -40,6 +38,18 @@ class DrawGraph:
         self.draw_graph()
 
 
+    def setup_canvas(self, frame_width, canvas_width, canvas_height):
+        self.scroll = Scrollbar (self.frame, orient=HORIZONTAL)
+        self.board = Canvas (self.frame, width = frame_width, height = canvas_height)
+        self.board['scrollregion'] = (0,0,canvas_width, canvas_height)
+        self.board ['xscrollcommand'] = self.scroll.set
+        self.scroll['command'] = self.board.xview
+        
+    def setup_frame(self, frame_width, frame_height, row, column):
+        self.frame = Frame(self.top_window, width = frame_width, height = frame_height, bd = 1)
+        self.frame.grid(row = 0, column = 0)
+        self.frame.grid_propagate(False)
+
     def set_min_max_values(self):
         for v in self.values:
             if v > self.max_value: self.max_value = v
@@ -49,7 +59,7 @@ class DrawGraph:
         self.range_of_values = self.max_value - self.min_value
 
     def set_scale(self):
-        self.scale = self.height / self.range_of_values
+        self.scale = self.y_bottom / self.range_of_values
 
     def set_x_axis_position(self):
         if self.min_value < 0 and self.max_value > 0:
